@@ -194,44 +194,62 @@ characters[index].describe();
 
 // 8.
 
-const HEROES = [
-    { id: 1, name: 'Captain America', squad: 'Avengers' },
-    { id: 2, name: 'Iron Man', squad: 'Avengers' },
-    { id: 3, name: 'Spiderman', squad: 'Avengers' },
-    { id: 4, name: 'Superman', squad: 'Justice League' },
-    { id: 5, name: 'Wonder Woman', squad: 'Justice League' },
-    { id: 6, name: 'Aquaman', squad: 'Justice League' },
-    { id: 7, name: 'Hulk', squad: 'Avengers' },
-];
-
 function findOne(arr, query) {
-    console.log(`query: ${query}`);
-    console.log(`object.keys: ${Object.keys(query)}`);
-    for (let key in query) {
-        console.log(query[key]);
-        let foundHero = arr.find(hero => query[key] === arr[key]);
-        console.log(`found hero: ${foundHero}`);
-        if (foundHero) {
-            return foundHero;
+    let keys = Object.keys(query); // array of keys
+    let found = arr.find(hero => query[keys[0]] === hero[keys[0]]); // possible Hero
+    let match = true;
+    if (found) {
+        keys.forEach(key => {
+            if (found[key] !== query[key]) {
+                match = false;
+            }
+        });
+        if (match) {
+            return found;
+        } else {
+            return null;
         }
-    }
+    };
     return null;
 }
 
-console.log(findOne(HEROES, { id: 1 }));
-//=> { id: 1, name: 'Captain America', squad: 'Avengers' }
+// 8a BONUS
 
-console.log(findOne(HEROES, { id: 10 }));
-//=> null
+const Database = {
+    store: {
+        heroes: [
+            { id: 1, name: 'Captain America', squad: 'Avengers' },
+            { id: 2, name: 'Iron Man', squad: 'Avengers' },
+            { id: 3, name: 'Spiderman', squad: 'Avengers' },
+            { id: 4, name: 'Superman', squad: 'Justice League' },
+            { id: 5, name: 'Wonder Woman', squad: 'Justice League' },
+            { id: 6, name: 'Aquaman', squad: 'Justice League' },
+            { id: 7, name: 'Hulk', squad: 'Avengers' },
+        ]
+    },
+    findOne: function (query) {
+        let keys = Object.keys(query); // array of keys
+        let found = this.store.heroes.find(hero => query[keys[0]] === hero[keys[0]]); // possible Hero
+        let match = true;
+        if (found) {
+            keys.forEach(key => {
+                if (found[key] !== query[key]) {
+                    match = false;
+                }
+            });
+            if (match) {
+                return found;
+            } else {
+                return null;
+            }
+        };
+        return null;
+    }
+};
 
-console.log(findOne(HEROES, { id: 2, name: 'Aquaman' }));
-//=> null
+Database.findOne({ id: 2 });
+// => { id: 2, name: 'Iron Man', squad: 'Avengers' }
 
-console.log(findOne(HEROES, { id: 5, squad: 'Justice League' }));
-//=> { id: 5, name: 'Wonder Woman', squad: 'Justice League' }
-
-console.log(findOne(HEROES, { squad: 'Justice League' }));
-//=> { id: 4, name: 'Superman', squad: 'Justice League' }
 
 
 
